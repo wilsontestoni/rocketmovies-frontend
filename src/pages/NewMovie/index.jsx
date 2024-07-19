@@ -65,7 +65,6 @@ export function NewMovie() {
 
   function handleBack() {
     navigate(-1);
-    console.log("cliquei");
   }
 
   return (

@@ -11,6 +11,8 @@ function AuthProvider({ children }) {
       const response = await api.post("/sessions", { email, password });
       const { user, token } = response.data;
 
+      delete user.password
+
       localStorage.setItem("@rocketseat:user", JSON.stringify(user));
       localStorage.setItem("@rocketseat:token", token);
 
@@ -57,6 +59,9 @@ function AuthProvider({ children }) {
 
     try {
       await api.put("/users", user);
+
+      delete user.old_password
+      delete user.password
 
       localStorage.setItem("@rocketseat:user", JSON.stringify(user));
       setData({ user, token: data.token });

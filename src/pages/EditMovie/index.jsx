@@ -59,9 +59,6 @@ export function EditMovie() {
       tags,
     };
 
-    console.log("movie tags:", movie.tags);
-    console.log("tags", tags);
-
     try {
       await api.put(`/movies/${id}`, movie);
       alert("Filme alterado com sucesso!");
@@ -95,7 +92,6 @@ export function EditMovie() {
   }
 
   function handleNewTag() {
-    console.log("Nova tag");
     setTags((prevState) => [...prevState, newTag]);
     setNewTag("");
   }
