@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { api } from "../../services/api";
+import { useAuth } from "../../hooks/auth";
+
+import avatarPlaceholder from "../../assets/avatar_placeholder.svg";
 
 import { FiArrowLeft, FiClock } from "react-icons/fi";
 
@@ -13,6 +16,8 @@ import { Header } from "../../components/Header";
 import { ButtonLink } from "../../components/ButtonLink";
 
 export function Details() {
+  const { user } = useAuth();
+
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -20,22 +25,30 @@ export function Details() {
   const [formatedData, setFormatedData] = useState("");
   const [movie, setMovie] = useState({});
 
+  const avatarUrl = user.avatar
+    ? `${api.defaults.baseURL}/files/${user.avatar}`
+    : avatarPlaceholder;
+
   useEffect(() => {
     async function fetchMovieData() {
       const response = await api.get(`/movies/${id}`);
       const movieData = response.data;
-      const movieCreationDate = movieData.created_at;
+      const movieUpdatedDate = movieData.updated_at;
+
+      
 
       setMovie(movieData);
 
-      handleData(movieCreationDate);
+      handleData(movieUpdatedDate);
     }
 
     fetchMovieData();
   }, []);
 
-  function handleData(creationDate) {
-    const date = new Date(creationDate);
+  function handleData(movieUpdatedDate) {
+    const date = new Date(movieUpdatedDate);
+
+    console.log(date)
 
     const day = ("0" + date.getDate()).slice(-2);
     const month = ("0" + (date.getMonth() + 1)).slice(-2);
@@ -75,11 +88,8 @@ export function Details() {
 
           <SubtitleContainer>
             <div>
-              <img
-                src="https://github.com/wilsontestoni.png"
-                alt="Imagem do usuário"
-              />
-              <p>Por Wilson Testoni</p>
+              <img src={avatarUrl} alt={user.name} />
+              <p>Por {user.name}</p>
             </div>
             <div>
               <FiClock />
